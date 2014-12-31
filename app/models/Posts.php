@@ -52,8 +52,10 @@ class Posts extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->belongsTo("users_id", "Users", "id");
-        $this->belongsTo("categories_id", "Categories", "id");
+        $this->belongsTo("users_id", "Users", "id", array(
+            'alias' => 'User'));
+        $this->belongsTo("categories_id", "Categories", "id", array(
+            'alias' => 'Category'));
     }
 
 }
