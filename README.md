@@ -1,7 +1,7 @@
-Tutorial: your first encounter with Phalcon
+Blog module made with Phalcon
 ===========================================
 
-We are going to walk through a process of creating a simple web application – blog.
+This is a simple application blog, inspired by phalcon/blog-tutorial.
 
 Blog is often used as an introductory example, and there is a very good reason for that: it contains Create, Read, Update and Delete operations (CRUD for short), uses SQL database (NoSQL proponents move along please) as persistent storage - all of which are the basic building blocks of a web app.
 
