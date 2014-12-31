@@ -42,15 +42,33 @@ try {
 		return $url;
 	});
 
-	/**
-	 * Setting up the view component
-	 */
-	$di->set('view', function() use ($config) {
-		$view = new \Phalcon\Mvc\View();
-		$view->setViewsDir($config->application->viewsDir);
-		return $view;
-	});
+        /**
+         * Setting up the view component
+         */
+        $di->set('view', function () use ($config) {
 
+            $view = new \Phalcon\Mvc\View();
+
+            $view->setViewsDir($config->application->viewsDir);
+
+            $view->registerEngines(array(
+                '.volt' => function ($view, $di) use ($config) {
+
+                    $volt = new Phalcon\Mvc\View\Engine\Volt($view, $di);
+
+                    $volt->setOptions(array(
+                        'compiledPath' => '../app/cache/',
+                        'compiledSeparator' => '_'
+                    ));
+
+                    return $volt;
+                },
+                '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
+            ));
+
+            return $view;
+        }, true);
+        
 	/**
 	 * Database connection is created based in the parameters defined in the configuration file
 	 */
