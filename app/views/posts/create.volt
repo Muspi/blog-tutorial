@@ -1,5 +1,4 @@
-
-<?php echo \Phalcon\Tag::form(array("categories/create", "autocomplete" => "off")) ?>
+{{ form("posts/create", "autocomplete" : "off") }}
 
     <table width="100%">
         <tr>
@@ -11,25 +10,25 @@
     <?php echo $this->getContent(); ?>
 
     <div align="center">
-        <h1>Create categories</h1>
+        <h1>Create a Post</h1>
     </div>
 
     <table align="center">
         <tr>
             <td align="right">
-                <label for="name">Name</label>
+                <label for="title">Title</label>
             </td>
             <td align="left">
-                <?php echo \Phalcon\Tag::textField(array("name", "size" => 30)) ?>
+                {{ text_field("name", "size" : 30) }}
             </td>
         </tr>
         <tr>
             <td align="right">
-                <label for="slug">Slug</label>
+                <label for="title">Content</label>
             </td>
             <td align="left">
-                <?php echo \Phalcon\Tag::textField(array("slug", "size" => 30)) ?>
+                {{ text_area("content", "size" : 30) }}
             </td>
         </tr>
     </table>
-</form>
+{{ end_form() }}

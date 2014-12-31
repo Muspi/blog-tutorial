@@ -1,4 +1,4 @@
-<?php echo $this->getContent(); ?>
+{{ content() }}
 
 <div align="right">
     <?php echo \Phalcon\Tag::linkTo(array("categories/new", "Create Categories", "class" => "btn")) ?>

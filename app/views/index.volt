@@ -1,4 +1,3 @@
-<?php use Phalcon\Tag as Tag ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,29 +20,29 @@
                     <div class="nav-collapse">
                         <ul class="nav pull-left">
                             <li>
-                                <?php echo Phalcon\Tag::linkTo('index', 'Home Page') ?>
+                                {{ link_to('index', 'Home Page') }}
                             </li>
-                            <?php if ($this->session->has('auth')) { ?>
+                            {% if session.get('auth') is not null %}
                                 <li>
-                                    <?php echo Phalcon\Tag::linkTo('posts/index', '+Posts') ?>
+                                     {{ link_to('posts/index', '+Posts') }}
                                 </li>
                                 <li>
-                                    <?php echo Phalcon\Tag::linkTo('categories/index', '+Categories') ?>
+                                    {{ link_to('categories/index', '+Categories') }}
                                 </li>
                                 <li>
-                                    <?php echo Phalcon\Tag::linkTo('users/logout', 'Log out') ?>
+                                     {{ link_to('users/logout', 'Log out') }}
                                 </li>
-                            <?php } else { ?>
+                            {% else %}
                                 <li>
-                                    <?php echo Phalcon\Tag::linkTo('users/index', 'Log in') ?>
+                                     {{ link_to('users/index', 'Log in') }}
                                 </li>
-                            <?php } ?>
+                            {% endif %}
                         </ul>
                 </div>
             </div>
         </div>
 
-        <?php echo $this->getContent() ?>
+        {{ content() }}
 
         <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
     </body>
