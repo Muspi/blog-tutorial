@@ -8,7 +8,7 @@ class CategoriesController extends ControllerBase
 
     public function indexAction()
     {
-        $this->session->conditions = null;
+         $this->persistent->parameters = null;
     }
 
     public function searchAction()
@@ -17,23 +17,24 @@ class CategoriesController extends ControllerBase
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, "Categories", $_POST);
-            $this->session->conditions = $query->getConditions();
-        } else {
+            $this->persistent->parameters = $query->getParams();
+        } 
+        else {
             $numberPage = $this->request->getQuery("page", "int");
             if ($numberPage <= 0) {
                 $numberPage = 1;
             }
         }
 
-        $parameters = array();
-        if ($this->session->conditions) {
-            $parameters["conditions"] = $this->session->conditions;
-        }
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = array();
+        }        
         $parameters["order"] = "id";
-
+        
         $categories = Categories::find($parameters);
         if (count($categories) == 0) {
-            $this->flash->notice("The search did not find any categories");
+            $this->flash->notice("The search did not find any category");
             return $this->dispatcher->forward(array(
                 "controller" => "categories",
                 "action" => "index"
@@ -45,9 +46,8 @@ class CategoriesController extends ControllerBase
             "limit"=> 10,
             "page" => $numberPage
         ));
-        $page = $paginator->getPaginate();
 
-        $this->view->setVar("page", $page);
+        $this->view->page = $paginator->getPaginate();
     }
 
     public function newAction()
@@ -55,6 +55,11 @@ class CategoriesController extends ControllerBase
 
     }
 
+    /**
+     * Edit Category entry
+     * @param int $id Category identifier
+     * @return type
+     */
     public function editAction($id)
     {
 
@@ -74,12 +79,16 @@ class CategoriesController extends ControllerBase
             }
             $this->view->setVar("id", $categories->id);
 
-            Tag::displayTo("id", $categories->id);
-            Tag::displayTo("name", $categories->name);
-            Tag::displayTo("slug", $categories->slug);
+            $this->tag->setDefault("id", $categories->id);
+            $this->tag->setDefault("name", $categories->name);
+            $this->tag->setDefault("slug", $categories->slug);
         }
     }
 
+    /**
+     * Create new Category entry
+     * @return type Forward
+     */
     public function createAction()
     {
 
@@ -133,13 +142,12 @@ class CategoriesController extends ControllerBase
                 "action" => "index"
             ));
         }
+        
+        $category->name = $this->request->getPost("name");
+        $category->slug = $this->request->getPost("slug");
 
-        $categories->id = $this->request->getPost("id");
-        $categories->name = $this->request->getPost("name");
-        $categories->slug = $this->request->getPost("slug");
-
-        if (!$categories->save()) {
-            foreach ($categories->getMessages() as $message) {
+        if (!$category->save()) {
+            foreach ($category->getMessages() as $message) {
                 $this->flash->error((string) $message);
             }
             return $this->dispatcher->forward(array(
@@ -148,7 +156,7 @@ class CategoriesController extends ControllerBase
                 "params" => array($categories->id)
             ));
         } else {
-            $this->flash->success("categories was updated successfully");
+            $this->flash->success("Category was updated successfully");
             return $this->dispatcher->forward(array(
                 "controller" => "categories",
                 "action" => "index"
